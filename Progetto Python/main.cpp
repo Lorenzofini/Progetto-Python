@@ -260,22 +260,7 @@ void setup() {
 void loop() {
   currentMillis = millis();
   server.handleClient();
-  
-  if(currentMillis - startMillis >= period){
-    startMillis = millis();
-    timeClient.update();
-    
-    time_t epochTime = timeClient.getEpochTime();
-    struct tm *ptm = gmtime ((time_t *)&epochTime); 
-    int monthDay = ptm->tm_mday;
-    int currentMonth = ptm->tm_mon+1;
-    String currentMonthName = months[currentMonth-1];
-    int currentYear = ptm->tm_year+1900;
-  
-    //Print complete date:
-    String currentDate = String(currentMonth) + "/" + String(monthDay) + "/" + String(currentYear);
-    Serial.print("Current date: ");
-    Serial.println(currentDate);
+
     //ritardo di 2 secondi affinchè il sensore si stabilizzi ed abbia tempo di effettuare la lettura
     delay(2000);
     float MaxT = 0;
@@ -303,7 +288,23 @@ void loop() {
     Serial.print(h);
     Serial.print(F("%  Temperature: "));
     Serial.print(t);
-    Serial.print(F("°C "));
+    Serial.print(F("°C "));  
+
+  if(currentMillis - startMillis >= period){
+    startMillis = millis();
+    timeClient.update();
+    
+    time_t epochTime = timeClient.getEpochTime();
+    struct tm *ptm = gmtime ((time_t *)&epochTime); 
+    int monthDay = ptm->tm_mday;
+    int currentMonth = ptm->tm_mon+1;
+    String currentMonthName = months[currentMonth-1];
+    int currentYear = ptm->tm_year+1900;
+  
+    //Print complete date:
+    String currentDate = String(currentMonth) + "/" + String(monthDay) + "/" + String(currentYear);
+    Serial.print("Current date: ");
+    Serial.println(currentDate);
     client.loop();
     while (!client.connected()) {
       String client_id = "esp8266-client-";
